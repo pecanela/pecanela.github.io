@@ -1,47 +1,32 @@
-// Configuração do Matter.js
-var Engine = Matter.Engine,
-    Render = Matter.Render,
-    World = Matter.World,
-    Bodies = Matter.Bodies,
-    Body = Matter.Body;
+const cubo = document.getElementById('cubo');
+let dragging = false;
+let posInicialX, posInicialY;
+let rotacaoX = 0;
+let rotacaoY = 0;
 
-var engine = Engine.create();
-var render = Render.create({
-  element: document.getElementById('container'),
-  engine: engine,
-  options: {
-    width: window.innerWidth,
-    height: window.innerHeight,
-    wireframes: false
-  }
+cubo.addEventListener('mousedown', (event) => {
+    dragging = true;
+    posInicialX = event.clientX;
+    posInicialY = event.clientY;
 });
 
-var cube = Bodies.rectangle(100, 100, 100, 100, { restitution: 0.5 }); // Cria o cubo
-
-// Adiciona o cubo ao mundo
-World.add(engine.world, [cube]);
-
-// Evento de clique no cubo
-cube.addEventListener('click', function() {
-  var forceMagnitude = 0.05; // Magnitude da força do clique
-  var force = {
-    x: forceMagnitude * Math.cos(cube.angle),
-    y: forceMagnitude * Math.sin(cube.angle)
-  };
-  Body.applyForce(cube, cube.position, force); // Aplica a força no cubo
+document.addEventListener('mousemove', (event) => {
+    if (dragging) {
+        const difX = event.clientX - posInicialX;
+        const difY = event.clientY - posInicialY;
+        rotacaoX += difY * 0.01;
+        rotacaoY += difX * 0.01;
+        cubo.style.transform = `rotateX(${rotacaoX}rad) rotateY(${rotacaoY}rad)`;
+        posInicialX = event.clientX;
+        posInicialY = event.clientY;
+    }
 });
 
-// Atualiza o motor de física do Matter.js
-function update() {
-  Engine.update(engine);
-  requestAnimationFrame(update);
-}
+document.addEventListener('mouseup', () => {
+    dragging = false;
+});
 
-update();
-
-// Atualiza o tamanho do canvas de renderização quando a janela é redimensionada
-window.addEventListener('resize', function() {
-  render.options.width = window.innerWidth;
-  render.options.height = window.innerHeight;
-  Render.canvasSize(render);
+cubo.addEventListener('click', () => {
+    cubo.style.transition = 'transform 1s';
+    cubo.style.transform = `rotateX(${rotacaoX + Math.PI}rad) rotateY(${rotacaoY + Math.PI}rad)`;
 });
