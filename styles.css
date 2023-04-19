@@ -1,5 +1,12 @@
 body {
-    background-color: black;
+    background-color: #000;
     margin: 0;
     overflow: hidden;
+}
+
+#container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
