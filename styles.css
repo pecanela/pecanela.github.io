@@ -1,15 +1,17 @@
 body {
     margin: 0;
     overflow: hidden;
+    background-color: black; /* Atualizado para background preto */
 }
 
 #cubo {
     width: 100px;
     height: 100px;
-    background-color: #ff0000;
+    background-color: white; /* Atualizado para cubo branco */
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
     transform-style: preserve-3d;
+    transform: translate3d(-50%, -50%, 0); /* Centralizado na tela */
     transition: transform 0.5s;
 }
