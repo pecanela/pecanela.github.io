@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Dado 3D Interativo</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            background-color: white;
-        }
-        canvas {
-            display: block;
-        }
-    </style>
+  <title>Cubo 3D Interativo</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="script.js"></script>
+  <div id="container">
+    <div id="cube">
+      <div class="face" id="front"></div>
+      <div class="face" id="back"></div>
+      <div class="face" id="top"></div>
+      <div class="face" id="bottom"></div>
+      <div class="face" id="left"></div>
+      <div class="face" id="right"></div>
+    </div>
+  </div>
+  
+  <script src="script.js"></script>
 </body>
 </html>
