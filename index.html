@@ -1,69 +1,73 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dado 3D Interativo</title>
-  <style>
-    body {
-      background-color: black;
-      margin: 0;
-      overflow: hidden;
-    }
-    canvas {
-      display: block;
-    }
-  </style>
+    <meta charset="utf-8">
+    <title>Cubo 3D Interativo</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
-  <script>
-    // Função para criar um cubo 3D
-    function createCube() {
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('canvas'), antialias: true});
-      renderer.setSize(window.innerWidth, window.innerHeight);
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Configuração do cenário
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
 
-      const geometry = new THREE.BoxGeometry();
-      const material = new THREE.MeshBasicMaterial({color: 0xffffff});
-      const cube = new THREE.Mesh(geometry, material);
-      scene.add(cube);
+        // Criação do cubo
+        const geometry = new THREE.BoxGeometry();
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
 
-      camera.position.z = 5;
+        // Configuração da câmera
+        camera.position.z = 5;
 
-      function animate() {
-        requestAnimationFrame(animate);
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
-        renderer.render(scene, camera);
-      }
+        // Função para animar o cubo
+        function animate() {
+            requestAnimationFrame(animate);
 
-      animate();
+            // Rotação do cubo
+            cube.rotation.x += 0.01;
+            cube.rotation.y += 0.01;
 
-      // Função para rolar o cubo quando clicado
-      cube.addEventListener('click', () => {
-        const randomAxis = Math.floor(Math.random() * 3);
-        const randomDirection = Math.random() > 0.5 ? 1 : -1;
-        const rotationSpeed = 0.1;
-        if (randomAxis === 0) {
-          cube.rotation.x += randomDirection * rotationSpeed;
-        } else if (randomAxis === 1) {
-          cube.rotation.y += randomDirection * rotationSpeed;
-        } else {
-          cube.rotation.z += randomDirection * rotationSpeed;
+            renderer.render(scene, camera);
         }
-      });
-    }
 
-    // Função para carregar a biblioteca Three.js e iniciar a criação do cubo
-    function loadThreeJS() {
-      const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js';
-      script.onload = createCube;
-      document.head.appendChild(script);
-    }
+        // Função de clique no cubo
+        cube.addEventListener('click', () => {
+            alert('Cliquei no cubo!');
+        });
 
-    // Chamada da função para carregar o Three.js e iniciar a criação do cubo
-    loadThreeJS();
-  </script>
+        // Função de clique na janela
+        function onWindowClick(event) {
+            const mouse = new THREE.Vector2();
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+            const raycaster = new THREE.Raycaster();
+            raycaster.setFromCamera(mouse, camera);
+
+            const intersects = raycaster.intersectObjects(scene.children);
+
+            if (intersects.length > 0 && intersects[0].object === cube) {
+                cube.dispatchEvent({ type: 'click' });
+            }
+        }
+
+        // Adiciona o ouvinte de eventos de clique na janela
+        window.addEventListener('click', onWindowClick);
+
+        animate();
+    </script>
 </body>
 </html>
