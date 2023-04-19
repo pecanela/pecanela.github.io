@@ -14,8 +14,10 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.getElementById('container').appendChild(renderer.domElement);
 
 // Cria um dado 3D
+const loader = new THREE.TextureLoader();
+const texture = loader.load('https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/dice.jpg');
 const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshNormalMaterial();
+const material = new THREE.MeshBasicMaterial({ map: texture });
 const dice = new THREE.Mesh(geometry, material);
 scene.add(dice);
 
