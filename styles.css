@@ -1,52 +1,5 @@
-.scene {
-    perspective: 800px;
-    margin-top: 150px;
-  }
-  
-  .cube {
-    width: 100px;
-    height: 100px;
-    transform-style: preserve-3d;
-    transition: transform 0.5s;
-  }
-  
-  .face {
-    width: 100px;
-    height: 100px;
-    line-height: 100px;
-    font-size: 48px;
-    font-weight: bold;
-    text-align: center;
-    position: absolute;
-  }
-  
-  .front {
-    transform: translateZ(50px);
-    background-color: #FFD700;
-  }
-  
-  .back {
-    transform: rotateX(180deg) translateZ(50px);
-    background-color: #FF4500;
-  }
-  
-  .top {
-    transform: rotateX(-90deg) translateZ(50px);
-    background-color: #32CD32;
-  }
-  
-  .bottom {
-    transform: rotateX(90deg) translateZ(50px);
-    background-color: #228B22;
-  }
-  
-  .left {
-    transform: rotateY(-90deg) translateZ(50px);
-    background-color: #1E90FF;
-  }
-  
-  .right {
-    transform: rotateY(90deg) translateZ(50px);
-    background-color: #0000FF;
-  }
-  
+body {
+    background-color: black;
+    margin: 0;
+    overflow: hidden;
+}

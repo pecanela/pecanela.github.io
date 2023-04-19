@@ -1,12 +1,31 @@
-// Adicione interação de clique para rodar o dado
-const cube = document.querySelector('.cube');
-cube.addEventListener('click', () => {
-  cube.style.transform = `rotateX(${getRandomInt(1, 7) * 360}deg) rotateY(${getRandomInt(1, 7) * 360}deg)`;
+// Variáveis para o canvas e contexto
+const canvas = document.getElementById('diceCanvas');
+const ctx = canvas.getContext('2d');
+
+// Função para desenhar o dado 3D
+function drawDice() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white';
+    ctx.fillRect(50, 50, 300, 300);
+    ctx.strokeRect(50, 50, 300, 300);
+
+    // Pontos do dado
+    ctx.fillStyle = 'black';
+    ctx.beginPath();
+    ctx.arc(100, 100, 20, 0, Math.PI * 2);
+    ctx.arc(200, 100, 20, 0, Math.PI * 2);
+    ctx.arc(300, 100, 20, 0, Math.PI * 2);
+    ctx.arc(100, 300, 20, 0, Math.PI * 2);
+    ctx.arc(200, 300, 20, 0, Math.PI * 2);
+    ctx.arc(300, 300, 20, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fill();
+}
+
+// Função para rolar o dado quando o canvas é clicado
+canvas.addEventListener('click', function () {
+    drawDice();
 });
 
-// Função utilitária para obter um número inteiro aleatório entre um intervalo
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
-}
+// Chamar a função de desenhar o dado 3D inicialmente
+drawDice();
