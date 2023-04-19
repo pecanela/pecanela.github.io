@@ -32,20 +32,29 @@
         // Configuração da câmera
         camera.position.z = 5;
 
+        // Variável de velocidade de rotação
+        let rotationSpeed = 0.01;
+
         // Função para animar o cubo
         function animate() {
             requestAnimationFrame(animate);
 
             // Rotação do cubo
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
+            cube.rotation.x += rotationSpeed;
+            cube.rotation.y += rotationSpeed;
 
             renderer.render(scene, camera);
         }
 
         // Função de clique no cubo
         cube.addEventListener('click', () => {
-            alert('Cliquei no cubo!');
+            // Gera um valor de velocidade de rotação aleatória entre -0.1 e 0.1
+            rotationSpeed = (Math.random() - 0.5) * 0.2;
+
+            // Aguarda 1 segundo (1000ms) e, em seguida, redefine a velocidade de rotação para 0
+            setTimeout(() => {
+                rotationSpeed = 0;
+            }, 1000);
         });
 
         // Função de clique na janela
