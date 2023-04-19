@@ -1,21 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Cubo 3D Interativo</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Dado 3D Interativo</title>
+  <style>
+    body {
+      background-color: black;
+      margin: 0;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
 </head>
 <body>
-  <div id="container">
-    <div id="cube">
-      <div class="face" id="front"></div>
-      <div class="face" id="back"></div>
-      <div class="face" id="top"></div>
-      <div class="face" id="bottom"></div>
-      <div class="face" id="left"></div>
-      <div class="face" id="right"></div>
-    </div>
-  </div>
-  
-  <script src="script.js"></script>
+  <canvas id="canvas"></canvas>
+  <script>
+    // Função para criar um cubo 3D
+    function createCube() {
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('canvas'), antialias: true});
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      const geometry = new THREE.BoxGeometry();
+      const material = new THREE.MeshBasicMaterial({color: 0xffffff});
+      const cube = new THREE.Mesh(geometry, material);
+      scene.add(cube);
+
+      camera.position.z = 5;
+
+      function animate() {
+        requestAnimationFrame(animate);
+        cube.rotation.x += 0.01;
+        cube.rotation.y += 0.01;
+        renderer.render(scene, camera);
+      }
+
+      animate();
+
+      // Função para rolar o cubo quando clicado
+      cube.addEventListener('click', () => {
+        const randomAxis = Math.floor(Math.random() * 3);
+        const randomDirection = Math.random() > 0.5 ? 1 : -1;
+        const rotationSpeed = 0.1;
+        if (randomAxis === 0) {
+          cube.rotation.x += randomDirection * rotationSpeed;
+        } else if (randomAxis === 1) {
+          cube.rotation.y += randomDirection * rotationSpeed;
+        } else {
+          cube.rotation.z += randomDirection * rotationSpeed;
+        }
+      });
+    }
+
+    // Função para carregar a biblioteca Three.js e iniciar a criação do cubo
+    function loadThreeJS() {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/110/three.min.js';
+      script.onload = createCube;
+      document.head.appendChild(script);
+    }
+
+    // Chamada da função para carregar o Three.js e iniciar a criação do cubo
+    loadThreeJS();
+  </script>
 </body>
 </html>
