@@ -1,6 +1,6 @@
 // set up global javascript variables
 
-var bgUrl = 'espaco.jpg'
+var bgUrl = 'espaco.jpg';
 
 var blackholeMass = 100;
 var curblackholeMass = 0;
