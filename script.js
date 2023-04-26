@@ -2,7 +2,7 @@
 
 var bgUrl = 'https://pt.best-wallpaper.net/NGC-7380-Wizard-Nebula-stars-universe_wallpapers.html'
 
-var blackholeMass = 500;
+var blackholeMass = 100;
 var curblackholeMass = 0;
 
 var canvas, gl; // canvas and webgl context
