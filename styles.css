@@ -1,17 +1,18 @@
-body {
-    margin: 0;
-    overflow: hidden;
-    background-color: black; /* Atualizado para background preto */
-}
-
-#cubo {
-    width: 100px;
-    height: 100px;
-    background-color: white; /* Atualizado para cubo branco */
+html, body {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform-style: preserve-3d;
-    transform: translate3d(-50%, -50%, 0); /* Centralizado na tela */
-    transition: transform 0.5s;
-}
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    padding: 0px;
+    margin: 0px;
+    overflow: hidden;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    background-color: #000;
+  }
+  
+  canvas {
+    margin: auto auto;
+  }
