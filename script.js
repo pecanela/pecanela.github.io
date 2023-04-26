@@ -1,6 +1,6 @@
 // set up global javascript variables
 
-var bgUrl = 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1427&q=80'
+var bgUrl = 'https://pt.best-wallpaper.net/NGC-7380-Wizard-Nebula-stars-universe_wallpapers.html'
 
 var blackholeMass = 500;
 var curblackholeMass = 0;
