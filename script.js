@@ -43,8 +43,8 @@ function init(image) {
 	// standard canvas setup here, except get webgl context
 	canvas = document.getElementById('glscreen');
 	gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-	canvas.width  = window.innerWidth >= window.innerHeight ? window.innerWidth : window.innerHeight;
-	canvas.height = window.innerWidth >= window.innerHeight ? window.innerWidth : window.innerHeight;
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
 
 	mouse = {x: originX/2, y: -(originY/2) + canvas.height, moved: false};
 	$(document).mousemove(function(e) {
