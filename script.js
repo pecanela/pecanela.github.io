@@ -2,7 +2,7 @@
 
 var bgUrl = 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1427&q=80'
 
-var blackholeMass = 1500;
+var blackholeMass = 500;
 var curblackholeMass = 0;
 
 var canvas, gl; // canvas and webgl context
