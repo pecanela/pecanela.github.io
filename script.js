@@ -14,8 +14,8 @@
 	function init(image) {
 	  canvas = document.getElementById('glscreen');
 	  gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-	  canvas.width = window.innerWidth;
-	  canvas.height = window.innerHeight;
+  
+	  resizeCanvas(); // Inicializa o tamanho do canvas
   
 	  mouse.x = canvas.width / 2;
 	  mouse.y = canvas.height / 2;
@@ -27,12 +27,12 @@
 	  gl.bufferData(
 		gl.ARRAY_BUFFER,
 		new Float32Array([
-		  -1.0, -1.0, 
-		  1.0, -1.0, 
-		  -1.0,  1.0, 
-		  -1.0,  1.0, 
-		  1.0, -1.0, 
-		  1.0,  1.0
+		  -1.0, -1.0,
+		   1.0, -1.0,
+		  -1.0,  1.0,
+		  -1.0,  1.0,
+		   1.0, -1.0,
+		   1.0,  1.0
 		]),
 		gl.STATIC_DRAW
 	  );
@@ -58,7 +58,6 @@
 	  gl.shaderSource(shader, source);
 	  gl.compileShader(shader);
   
-	  // Verificar erros de compilação
 	  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
 		console.error('Erro ao compilar shader:', gl.getShaderInfoLog(shader));
 		gl.deleteShader(shader);
@@ -73,7 +72,6 @@
 	  gl.attachShader(prog, fragmentShader);
 	  gl.linkProgram(prog);
   
-	  // Verificar erros de linkagem
 	  if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
 		console.error('Erro ao linkar programa:', gl.getProgramInfoLog(prog));
 		gl.deleteProgram(prog);
@@ -104,11 +102,11 @@
 	  gl.bufferData(
 		gl.ARRAY_BUFFER,
 		new Float32Array([
-		  0.0, 0.0, 
-		  1.0, 0.0, 
-		  0.0, 1.0, 
-		  0.0, 1.0, 
-		  1.0, 0.0, 
+		  0.0, 0.0,
+		  1.0, 0.0,
+		  0.0, 1.0,
+		  0.0, 1.0,
+		  1.0, 0.0,
 		  1.0, 1.0
 		]),
 		gl.STATIC_DRAW
@@ -140,10 +138,14 @@
 	  window.addEventListener('resize', onResize);
 	}
   
-	function onResize() {
+	function resizeCanvas() {
 	  canvas.width = window.innerWidth;
 	  canvas.height = window.innerHeight;
 	  gl.viewport(0, 0, canvas.width, canvas.height);
+	}
+  
+	function onResize() {
+	  resizeCanvas();
 	  gl.uniform2f(locationOfResolution, canvas.width, canvas.height);
 	}
   
