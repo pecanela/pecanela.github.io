@@ -31,14 +31,12 @@
     uniform vec2 u_mouse;
     uniform float u_mass;
     uniform float u_time;
-    uniform float u_clickedTime;
 
     const float PI = 3.14159265359;
 
     vec2 rotate(vec2 mt, vec2 st, float angle) {
-      float rotation = mod((angle + u_clickedTime) * PI, 2.0 * PI); // Normaliza o ângulo
-      float cosVal = cos(rotation);
-      float sinVal = sin(rotation);
+      float cosVal = cos(angle * PI);
+      float sinVal = sin(angle * PI);
 
       float nx = (cosVal * (st.x - mt.x)) - (sinVal * (st.y - mt.y)) + mt.x;
       float ny = (sinVal * (st.x - mt.x)) + (cosVal * (st.y - mt.y)) + mt.y;
