@@ -10,17 +10,18 @@
 <body>
   <canvas id="glscreen"></canvas>
 
-  <!-- Shaders -->
+  <!-- Vertex Shader -->
   <script id="vertex-shader" type="x-shader/x-vertex">
     attribute vec2 a_position;
     attribute vec2 a_texCoord;
     varying vec2 v_texCoord;
     void main() {
-      gl_Position = vec4(a_position, 0, 1);
+      gl_Position = vec4(a_position, 0.0, 1.0);
       v_texCoord = a_texCoord;
     }
   </script>
 
+  <!-- Fragment Shader -->
   <script id="fragment-shader" type="x-shader/x-fragment">
     precision mediump float;
     uniform sampler2D u_image;
@@ -44,7 +45,7 @@
     }
 
     void main() {
-      vec2 st = gl_FragCoord.xy / u_resolution;
+      vec2 st = v_texCoord;
       vec2 mt = u_mouse / u_resolution;
 
       float dx = st.x - mt.x;

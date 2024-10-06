@@ -20,6 +20,7 @@
 	  mouse.x = canvas.width / 2;
 	  mouse.y = canvas.height / 2;
   
+	  // Configuração do viewport
 	  gl.viewport(0, 0, canvas.width, canvas.height);
   
 	  // Buffer de posição
@@ -38,6 +39,7 @@
 		gl.STATIC_DRAW
 	  );
   
+	  // Obtenha os shaders
 	  const vertexShaderSource = document.getElementById('vertex-shader').textContent;
 	  const fragmentShaderSource = document.getElementById('fragment-shader').textContent;
   
@@ -109,12 +111,12 @@
 	  gl.bufferData(
 		gl.ARRAY_BUFFER,
 		new Float32Array([
-		  -1.0, -1.0,
-		   1.0, -1.0,
-		  -1.0,  1.0,
-		  -1.0,  1.0,
-		   1.0, -1.0,
-		   1.0,  1.0
+		  0.0, 0.0,
+		  1.0, 0.0,
+		  0.0, 1.0,
+		  0.0, 1.0,
+		  1.0, 0.0,
+		  1.0, 1.0
 		]),
 		gl.STATIC_DRAW
 	  );
@@ -125,8 +127,8 @@
 	  const texture = gl.createTexture();
 	  gl.bindTexture(gl.TEXTURE_2D, texture);
   
-	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT);
-	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT);
+	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
   
