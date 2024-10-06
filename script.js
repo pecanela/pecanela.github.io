@@ -22,8 +22,9 @@
   
 	  gl.viewport(0, 0, canvas.width, canvas.height);
   
-	  const buffer = gl.createBuffer();
-	  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+	  // Buffer de posição
+	  const positionBuffer = gl.createBuffer();
+	  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 	  gl.bufferData(
 		gl.ARRAY_BUFFER,
 		new Float32Array([
@@ -45,6 +46,12 @@
   
 	  program = createProgram(vertexShader, fragmentShader);
 	  gl.useProgram(program);
+  
+	  // Localizações dos atributos
+	  const positionLocation = gl.getAttribLocation(program, 'a_position');
+	  gl.enableVertexAttribArray(positionLocation);
+	  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+	  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
   
 	  getLocations();
 	  setUniforms(image);
@@ -95,30 +102,31 @@
 	  gl.uniform1f(locationOfTime, currentTime);
 	  gl.uniform1f(locationOfClickedTime, clickedTime);
   
+	  // Coordenadas de textura
 	  const texCoordLocation = gl.getAttribLocation(program, 'a_texCoord');
-  
 	  const texCoordBuffer = gl.createBuffer();
 	  gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
 	  gl.bufferData(
 		gl.ARRAY_BUFFER,
 		new Float32Array([
-		  0.0, 0.0,
-		  1.0, 0.0,
-		  0.0, 1.0,
-		  0.0, 1.0,
-		  1.0, 0.0,
-		  1.0, 1.0
+		  -1.0, -1.0,
+		   1.0, -1.0,
+		  -1.0,  1.0,
+		  -1.0,  1.0,
+		   1.0, -1.0,
+		   1.0,  1.0
 		]),
 		gl.STATIC_DRAW
 	  );
 	  gl.enableVertexAttribArray(texCoordLocation);
 	  gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
   
+	  // Configuração da textura
 	  const texture = gl.createTexture();
 	  gl.bindTexture(gl.TEXTURE_2D, texture);
   
-	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT);
+	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT);
 	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
   
@@ -142,11 +150,11 @@
 	  canvas.width = window.innerWidth;
 	  canvas.height = window.innerHeight;
 	  gl.viewport(0, 0, canvas.width, canvas.height);
+	  gl.uniform2f(locationOfResolution, canvas.width, canvas.height);
 	}
   
 	function onResize() {
 	  resizeCanvas();
-	  gl.uniform2f(locationOfResolution, canvas.width, canvas.height);
 	}
   
 	function render() {
@@ -171,10 +179,6 @@
 	  gl.uniform2f(locationOfMouse, mouse.x, mouse.y);
 	  gl.uniform1f(locationOfTime, currentTime);
 	  gl.uniform1f(locationOfClickedTime, clickedTime);
-  
-	  const positionLocation = gl.getAttribLocation(program, 'a_position');
-	  gl.enableVertexAttribArray(positionLocation);
-	  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
   
 	  gl.drawArrays(gl.TRIANGLES, 0, 6);
 	  requestAnimationFrame(render);
