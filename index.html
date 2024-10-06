@@ -36,11 +36,12 @@
     const float PI = 3.14159265359;
 
     vec2 rotate(vec2 mt, vec2 st, float angle) {
-      float cosVal = cos((angle + u_clickedTime) * PI);
-      float sinVal = sin(angle * 0.0);
+      float rotation = mod((angle + u_clickedTime) * PI, 2.0 * PI); // Normaliza o ângulo
+      float cosVal = cos(rotation);
+      float sinVal = sin(rotation);
 
-      float nx = (cosVal * (st.x - mt.x)) + (sinVal * (st.y - mt.y)) + mt.x;
-      float ny = (cosVal * (st.y - mt.y)) - (sinVal * (st.x - mt.x)) + mt.y;
+      float nx = (cosVal * (st.x - mt.x)) - (sinVal * (st.y - mt.y)) + mt.x;
+      float ny = (sinVal * (st.x - mt.x)) + (cosVal * (st.y - mt.y)) + mt.y;
       return vec2(nx, ny);
     }
 

@@ -160,30 +160,35 @@
 	}
   
 	function render() {
-	  currentTime = (Date.now() - startTime) / 1000;
-  
-	  if (curBlackholeMass < blackholeMass - 50) {
-		curBlackholeMass += (blackholeMass - curBlackholeMass) * 0.03;
-	  }
-  
-	  if (clicked) {
-		clickedTime += 0.03;
-	  } else if (clickedTime > 0) {
-		clickedTime -= clickedTime * 0.015;
-	  }
-  
-	  if (!mouse.moved) {
-		mouse.y = (canvas.height / 2) + Math.sin(currentTime * 0.7) * (canvas.height * 0.25);
-		mouse.x = (canvas.width / 2) + Math.sin(currentTime * 0.6) * (canvas.width * 0.35);
-	  }
-  
-	  gl.uniform1f(locationOfMass, curBlackholeMass * 0.00001);
-	  gl.uniform2f(locationOfMouse, mouse.x, mouse.y);
-	  gl.uniform1f(locationOfTime, currentTime);
-	  gl.uniform1f(locationOfClickedTime, clickedTime);
-  
-	  gl.drawArrays(gl.TRIANGLES, 0, 6);
-	  requestAnimationFrame(render);
+		currentTime = (Date.now() - startTime) / 1000;
+	
+		if (curBlackholeMass < blackholeMass - 50) {
+		  curBlackholeMass += (blackholeMass - curBlackholeMass) * 0.03;
+		}
+	
+		const maxClickedTime = 5.0; // Limite máximo para evitar zoom infinito
+	
+		if (clicked) {
+		  clickedTime = Math.min(clickedTime + 0.03, maxClickedTime);
+		} else if (clickedTime > 0) {
+		  clickedTime -= clickedTime * 0.015;
+		  if (clickedTime < 0.001) {
+			clickedTime = 0;
+		  }
+		}
+	
+		if (!mouse.moved) {
+		  mouse.y = (canvas.height / 2) + Math.sin(currentTime * 0.7) * (canvas.height * 0.25);
+		  mouse.x = (canvas.width / 2) + Math.sin(currentTime * 0.6) * (canvas.width * 0.35);
+		}
+	
+		gl.uniform1f(locationOfMass, curBlackholeMass * 0.00001);
+		gl.uniform2f(locationOfMouse, mouse.x, mouse.y);
+		gl.uniform1f(locationOfTime, currentTime);
+		gl.uniform1f(locationOfClickedTime, clickedTime);
+	
+		gl.drawArrays(gl.TRIANGLES, 0, 6);
+		requestAnimationFrame(render);
 	}
   
 	window.addEventListener('load', () => {
