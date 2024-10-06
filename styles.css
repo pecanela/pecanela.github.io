@@ -1,18 +1,13 @@
 html, body {
-  position: absolute;
-  top: 0px;
-  left: 0px;
-  right: 0px;
-  bottom: 0px;
-  padding: 0px;
-  margin: 0px;
-  overflow: hidden;
-  display: flex;
+  margin: 0;
+  padding: 0;
   height: 100%;
-  width: 100%;
   background-color: #000;
+  overflow: hidden;
 }
 
 canvas {
-  margin: auto auto;
+  display: block;
+  width: 100%;
+  height: 100%;
 }
