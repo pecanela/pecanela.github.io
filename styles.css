@@ -1,13 +1,13 @@
-/* Reset margins and padding, set background color, and hide overflow */
+/* Remove default margins and padding, set height, background color, and hide overflow */
 html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background-color: #000; /* Black background */
-  overflow: hidden;
+  background-color: #000; /* Set background color to black */
+  overflow: hidden;       /* Hide scrollbars */
 }
 
-/* Ensure the canvas covers the entire viewport */
+/* Make the canvas fill the entire viewport */
 canvas {
   display: block;
   width: 100%;

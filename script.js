@@ -1,53 +1,41 @@
 (() => {
-	// URL of the background image
-	const bgUrl = 'space.jpg';
-	// Maximum mass of the black hole
-	const blackholeMass = 100;
-	// Current mass, starts at zero for animation effect
-	let curBlackholeMass = 0;
+	const bgUrl = 'espaco.jpg';     // URL of the background image
+	const blackholeMass = 100;      // Maximum mass for the black hole effect
+	let curBlackholeMass = 0;       // Current mass, starts at 0 for animation
   
-	// Variables for canvas, WebGL context, and shader program
-	let canvas, gl, program;
-	// Locations of uniform variables in shaders
-	let locationOfTime, locationOfResolution, locationOfMouse, locationOfMass;
-	// Mouse object to track position and movement
-	let mouse = { x: 0, y: 0, moved: false };
-	// Timing variables
-	let startTime = Date.now();
-	let currentTime = 0;
+	let canvas, gl, program;        // Variables for canvas, WebGL context, and shader program
+	let locationOfTime, locationOfResolution, locationOfMouse, locationOfMass; // Uniform locations
+	let mouse = { x: 0, y: 0, moved: false }; // Mouse position and movement flag
+	let startTime = Date.now();     // Start time of the simulation
+	let currentTime = 0;            // Current elapsed time
   
 	/**
 	 * Initializes the WebGL context, shaders, buffers, and starts the render loop.
-	 * @param {HTMLImageElement} image - The background image to be used as texture.
+	 * @param {HTMLImageElement} image - The loaded background image.
 	 */
 	function init(image) {
-	  // Get the canvas element and WebGL context
-	  canvas = document.getElementById('glscreen');
-	  gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+	  canvas = document.getElementById('glscreen'); // Get the canvas element
+	  gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); // Get the WebGL context
   
-	  // Set the canvas size to match the window
-	  resizeCanvas();
+	  resizeCanvas(); // Set the canvas size to match the window
   
-	  // Initialize mouse position to the center of the canvas
-	  mouse.x = canvas.width / 2;
-	  mouse.y = canvas.height / 2;
+	  mouse.x = canvas.width / 2;   // Initialize mouse x-position to canvas center
+	  mouse.y = canvas.height / 2;  // Initialize mouse y-position to canvas center
   
-	  // Set the viewport to cover the entire canvas
-	  gl.viewport(0, 0, canvas.width, canvas.height);
+	  gl.viewport(0, 0, canvas.width, canvas.height); // Set the viewport to the canvas size
   
-	  // Create and bind the position buffer
+	  // Position buffer for drawing a rectangle over the entire canvas
 	  const positionBuffer = gl.createBuffer();
 	  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-	  // Define the positions of the rectangle covering the canvas
 	  gl.bufferData(
 		gl.ARRAY_BUFFER,
 		new Float32Array([
-		  -1.0, -1.0,  // Bottom-left corner
-		   1.0, -1.0,  // Bottom-right corner
-		  -1.0,  1.0,  // Top-left corner
-		  -1.0,  1.0,  // Top-left corner
-		   1.0, -1.0,  // Bottom-right corner
-		   1.0,  1.0   // Top-right corner
+		  -1.0, -1.0, // Bottom-left corner
+		   1.0, -1.0, // Bottom-right corner
+		  -1.0,  1.0, // Top-left corner
+		  -1.0,  1.0, // Top-left corner
+		   1.0, -1.0, // Bottom-right corner
+		   1.0,  1.0  // Top-right corner
 		]),
 		gl.STATIC_DRAW
 	  );
@@ -56,37 +44,32 @@
 	  const vertexShaderSource = document.getElementById('2d-vertex-shader').textContent;
 	  const fragmentShaderSource = document.getElementById('2d-fragment-shader').textContent;
   
-	  // Compile the shaders
+	  // Create and compile the shaders
 	  const vertexShader = createShader(gl.VERTEX_SHADER, vertexShaderSource);
 	  const fragmentShader = createShader(gl.FRAGMENT_SHADER, fragmentShaderSource);
   
-	  // Create and link the shader program
+	  // Create the shader program and use it
 	  program = createProgram(vertexShader, fragmentShader);
 	  gl.useProgram(program);
   
-	  // Get the location of the position attribute and enable it
+	  // Attribute locations for the shader program
 	  const positionLocation = gl.getAttribLocation(program, 'a_position');
 	  gl.enableVertexAttribArray(positionLocation);
 	  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-	  // Define how to read the position data from the buffer
 	  gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
   
-	  // Get the locations of uniform variables in the shaders
-	  getLocations();
-	  // Set the initial values for the uniforms
-	  setUniforms(image);
+	  getLocations();   // Get uniform locations
+	  setUniforms(image); // Set initial uniform values
   
-	  // Add event listeners for mouse movement and window resize
-	  addEventListeners();
-	  // Start the render loop
-	  render();
+	  addEventListeners(); // Add event listeners for interaction
+	  render();            // Start the rendering loop
 	}
   
 	/**
-	 * Creates and compiles a shader.
-	 * @param {number} type - The type of shader (vertex or fragment).
+	 * Creates and compiles a shader from the source code.
+	 * @param {GLenum} type - The type of shader (vertex or fragment).
 	 * @param {string} source - The GLSL source code for the shader.
-	 * @returns {WebGLShader} - The compiled shader.
+	 * @returns {WebGLShader|null} - The compiled shader, or null if compilation failed.
 	 */
 	function createShader(type, source) {
 	  const shader = gl.createShader(type);
@@ -103,10 +86,10 @@
 	}
   
 	/**
-	 * Creates a shader program by linking vertex and fragment shaders.
+	 * Creates a shader program by linking the vertex and fragment shaders.
 	 * @param {WebGLShader} vertexShader - The compiled vertex shader.
 	 * @param {WebGLShader} fragmentShader - The compiled fragment shader.
-	 * @returns {WebGLProgram} - The linked shader program.
+	 * @returns {WebGLProgram|null} - The linked shader program, or null if linking failed.
 	 */
 	function createProgram(vertexShader, fragmentShader) {
 	  const prog = gl.createProgram();
@@ -124,7 +107,7 @@
 	}
   
 	/**
-	 * Retrieves the locations of uniform variables from the shader program.
+	 * Retrieves the locations of uniform variables in the shader program.
 	 */
 	function getLocations() {
 	  locationOfResolution = gl.getUniformLocation(program, 'u_resolution');
@@ -134,64 +117,58 @@
 	}
   
 	/**
-	 * Sets the uniform variables for the shaders.
-	 * @param {HTMLImageElement} image - The image to be used as texture.
+	 * Sets the uniform variables in the shader program.
+	 * @param {HTMLImageElement} image - The background image to use as a texture.
 	 */
 	function setUniforms(image) {
-	  // Set the resolution uniform
-	  gl.uniform2f(locationOfResolution, canvas.width, canvas.height);
-	  // Set the mouse position uniform
-	  gl.uniform2f(locationOfMouse, mouse.x, mouse.y);
-	  // Set the mass uniform
-	  gl.uniform1f(locationOfMass, curBlackholeMass * 0.00001);
-	  // Set the time uniform
-	  gl.uniform1f(locationOfTime, currentTime);
+	  gl.uniform2f(locationOfResolution, canvas.width, canvas.height); // Set resolution
+	  gl.uniform2f(locationOfMouse, mouse.x, mouse.y);                 // Set mouse position
+	  gl.uniform1f(locationOfMass, curBlackholeMass * 0.00001);        // Set mass
+	  gl.uniform1f(locationOfTime, currentTime);                       // Set time
   
-	  // Create and bind the texture coordinate buffer
+	  // Texture coordinate buffer for mapping the image onto the rectangle
 	  const texCoordLocation = gl.getAttribLocation(program, 'a_texCoord');
 	  const texCoordBuffer = gl.createBuffer();
 	  gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
-	  // Define the texture coordinates corresponding to the rectangle vertices
 	  gl.bufferData(
 		gl.ARRAY_BUFFER,
 		new Float32Array([
-		  0.0, 0.0,  // Bottom-left corner
-		  1.0, 0.0,  // Bottom-right corner
-		  0.0, 1.0,  // Top-left corner
-		  0.0, 1.0,  // Top-left corner
-		  1.0, 0.0,  // Bottom-right corner
-		  1.0, 1.0   // Top-right corner
+		  0.0, 0.0, // Bottom-left corner
+		  1.0, 0.0, // Bottom-right corner
+		  0.0, 1.0, // Top-left corner
+		  0.0, 1.0, // Top-left corner
+		  1.0, 0.0, // Bottom-right corner
+		  1.0, 1.0  // Top-right corner
 		]),
 		gl.STATIC_DRAW
 	  );
 	  gl.enableVertexAttribArray(texCoordLocation);
-	  // Define how to read the texture coordinate data from the buffer
 	  gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
   
-	  // Create and bind the texture
+	  // Texture setup
 	  const texture = gl.createTexture();
 	  gl.bindTexture(gl.TEXTURE_2D, texture);
   
-	  // Set texture parameters for wrapping and filtering
-	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+	  // Set texture parameters
+	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); // Prevent repeating
+	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); // Prevent repeating
+	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);    // Smooth scaling
+	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);    // Smooth scaling
   
-	  // Upload the image to the texture
+	  // Upload the image into the texture
 	  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
 	}
   
 	/**
-	 * Adds event listeners for mouse movement and window resize.
+	 * Adds event listeners for mouse movement and window resizing.
 	 */
 	function addEventListeners() {
 	  // Update mouse position on mouse move
 	  canvas.addEventListener('mousemove', (e) => {
 		const rect = canvas.getBoundingClientRect();
-		mouse.x = e.clientX - rect.left;
-		mouse.y = canvas.height - (e.clientY - rect.top);
-		mouse.moved = true;
+		mouse.x = e.clientX - rect.left;                  // Calculate mouse x within canvas
+		mouse.y = canvas.height - (e.clientY - rect.top); // Calculate mouse y within canvas (invert y-axis)
+		mouse.moved = true;                               // Set mouse moved flag
 	  });
   
 	  // Adjust canvas size on window resize
@@ -199,57 +176,54 @@
 	}
   
 	/**
-	 * Resizes the canvas to match the window dimensions.
+	 * Resizes the canvas to match the window dimensions and updates related settings.
 	 */
 	function resizeCanvas() {
 	  canvas.width = window.innerWidth;
 	  canvas.height = window.innerHeight;
-	  // Update the viewport and resolution uniform
-	  gl.viewport(0, 0, canvas.width, canvas.height);
-	  gl.uniform2f(locationOfResolution, canvas.width, canvas.height);
+	  gl.viewport(0, 0, canvas.width, canvas.height); // Update viewport
+	  gl.uniform2f(locationOfResolution, canvas.width, canvas.height); // Update resolution uniform
 	}
   
 	/**
-	 * Handler for window resize event.
+	 * Handler for the window resize event.
 	 */
 	function onResize() {
-	  resizeCanvas();
+	  resizeCanvas(); // Call the resize function
 	}
   
 	/**
-	 * The render loop that updates and draws each frame.
+	 * The main render loop that updates and draws each frame.
 	 */
 	function render() {
-	  // Calculate the elapsed time
-	  currentTime = (Date.now() - startTime) / 1000;
+	  currentTime = (Date.now() - startTime) / 1000; // Calculate elapsed time in seconds
   
-	  // Smoothly increase the black hole mass to its maximum value
+	  // Gradually increase the black hole mass for a smooth animation
 	  if (curBlackholeMass < blackholeMass - 50) {
-		curBlackholeMass += (blackholeMass - curBlackholeMass) * 0.03;
+		curBlackholeMass += (blackholeMass - curBlackholeMass) * 0.03; // Smooth increment
 	  }
   
-	  // If the mouse hasn't moved, animate the mouse position
+	  // If the mouse hasn't moved, animate the mouse position for a dynamic effect
 	  if (!mouse.moved) {
 		mouse.y = (canvas.height / 2) + Math.sin(currentTime * 0.7) * (canvas.height * 0.25);
 		mouse.x = (canvas.width / 2) + Math.sin(currentTime * 0.6) * (canvas.width * 0.35);
 	  }
   
 	  // Update uniforms with the current values
-	  gl.uniform1f(locationOfMass, curBlackholeMass * 0.00001);
-	  gl.uniform2f(locationOfMouse, mouse.x, mouse.y);
-	  gl.uniform1f(locationOfTime, currentTime);
+	  gl.uniform1f(locationOfMass, curBlackholeMass * 0.00001); // Update mass
+	  gl.uniform2f(locationOfMouse, mouse.x, mouse.y);          // Update mouse position
+	  gl.uniform1f(locationOfTime, currentTime);                // Update time
   
-	  // Draw the rectangle (two triangles)
+	  // Draw the scene (two triangles forming a rectangle)
 	  gl.drawArrays(gl.TRIANGLES, 0, 6);
-	  // Request the next frame
-	  requestAnimationFrame(render);
+	  requestAnimationFrame(render); // Request the next frame
 	}
   
-	// Start the simulation once the window has loaded
+	// Start the simulation after the window has loaded
 	window.addEventListener('load', () => {
 	  const image = new Image();
-	  image.crossOrigin = 'Anonymous'; // Enable cross-origin image loading
-	  image.src = bgUrl; // Set the source of the image
+	  image.crossOrigin = 'Anonymous'; // Allow cross-origin image loading
+	  image.src = bgUrl;               // Set the source of the image
 	  image.onload = () => init(image); // Initialize once the image has loaded
 	});
   })();
