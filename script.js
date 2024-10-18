@@ -228,3 +228,23 @@
 	});
   })();
   
+
+
+  	window.onload = function() {
+  // Seu código de inicialização existente
+  init();
+
+  // Adicione um listener para o botão de play
+  const playButton = document.getElementById('play-button');
+  const audio = document.getElementById('background-audio');
+
+  playButton.addEventListener('click', function() {
+    audio.play();
+    playButton.style.display = 'none'; // Oculta o botão após clicar
+ 	});
+  };
+
+canvas.addEventListener('click', function() {
+	audio.play();
+  });
+  
