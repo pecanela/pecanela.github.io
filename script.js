@@ -65,21 +65,34 @@
 		addEventListeners(); // Add event listeners for interaction
 		render();            // Start the rendering loop
 
+
+
+
+
+
+
+
+
+
+
+
+
 		// Inicializa o áudio e o botão play/pause
 		audio = document.getElementById('background-audio');
 		playPauseButton = document.getElementById('play-pause-button');
 
-		// Tenta reproduzir o áudio ao carregar
-		audio.play().catch(function (error) {
-			// Autoplay foi bloqueado, atualiza a interface do botão
+		// Tenta reproduzir o áudio assim que a página carrega
+		audio.play().then(() => {
+			// Se a reprodução for bem-sucedida, oculta o botão, pois a música já está tocando.
+			playPauseButton.style.display = 'none';
+		}).catch(function (error) {
+			// Se o autoplay for bloqueado, mostra o botão e atualiza para o ícone de "play".
 			console.log('Autoplay bloqueado:', error);
+			playPauseButton.style.display = 'block';
 			playPauseButton.textContent = '▶️';
 		});
 
-		// Define o ícone inicial do botão
-		playPauseButton.textContent = audio.paused ? '▶️' : '⏸️';
-
-		// Adiciona o listener ao botão play/pause
+		// Adiciona o listener ao botão play/pause para casos onde o usuário precisa iniciar manualmente
 		playPauseButton.addEventListener('click', function () {
 			if (audio.paused) {
 				audio.play();
@@ -89,6 +102,14 @@
 				playPauseButton.textContent = '▶️';
 			}
 		});
+
+
+
+
+
+
+
+
 
 	}
 
