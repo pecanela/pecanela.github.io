@@ -17,19 +17,25 @@ canvas {
 
 /* Estilo para o botão play/pause */
 #play-pause-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  display: none; /* O botão estará oculto por padrão */
+  position: fixed;
+  bottom: 10px; /* Ajuste a posição para o canto inferior */
+  right: 10px; /* Mantém o botão no lado direito */
   z-index: 10;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(255, 255, 255, 0.5); /* Fundo semi-transparente para ser discreto */
   border: none;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 24px;
+  width: 30px; /* Tamanho reduzido para ser mais discreto */
+  height: 30px; /* Tamanho reduzido para ser mais discreto */
+  font-size: 18px; /* Tamanho da fonte menor para caber no botão */
+  color: #333; /* Cor do ícone */
   cursor: pointer;
 }
 
 #play-pause-button:focus {
   outline: none;
+}
+
+#play-pause-button:hover {
+  background-color: rgba(255, 255, 255, 0.8); /* Torna-se um pouco mais visível ao passar o mouse */
 }
