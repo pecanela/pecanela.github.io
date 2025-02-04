@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
   <!-- CSS customizado -->
   <link rel="stylesheet" href="./style.css">
-  <!-- Estilos adicionais para garantir que o botão fique sobre o background -->
   <style>
     /* Garante que o canvas preencha toda a tela */
     canvas {
@@ -16,12 +15,12 @@
       height: 100%;
     }
     
-    /* Estilo para o botão play/pause: discreto e posicionado por cima do background */
+    /* Botão play/pause discreto e posicionado por cima do background */
     #play-pause-button {
       position: fixed;
       bottom: 10px;
       right: 10px;
-      z-index: 1000; /* Maior que o canvas para ficar visível */
+      z-index: 1000; /* Fica sobre o canvas */
       background-color: rgba(255, 255, 255, 0.5);
       border: none;
       border-radius: 50%;
@@ -39,11 +38,11 @@
   </style>
 </head>
 <body>
-  <!-- Botão para iniciar/pausar a música (fica sobre o background) -->
+  <!-- Botão para controle do áudio (inicia visível se o autoplay for bloqueado) -->
   <button id="play-pause-button">⏸️</button>
 
-  <!-- Elemento de áudio: autoplay está definido; em alguns navegadores pode ser bloqueado, mas o botão permitirá interações -->
-  <audio id="background-audio" src="Black Hole's Embrace.mp3" loop autoplay></audio>
+  <!-- Elemento de áudio com autoplay e loop -->
+  <audio id="background-audio" src="Black Hole's Embrace.mp3" loop autoplay playsinline></audio>
 
   <!-- Canvas onde o conteúdo WebGL será renderizado -->
   <canvas id="glscreen"></canvas>
@@ -52,9 +51,7 @@
   <script id="2d-vertex-shader" type="x-shader/x-vertex">
     attribute vec2 a_position;
     attribute vec2 a_texCoord;
-
     varying vec2 v_texCoord;
-
     void main() {
       gl_Position = vec4(a_position, 0, 1);
       v_texCoord = a_texCoord;
@@ -64,18 +61,13 @@
   <!-- Fragment Shader -->
   <script id="2d-fragment-shader" type="x-shader/x-fragment">
     precision mediump float;
-
     uniform sampler2D u_image;
     varying vec2 v_texCoord;
-
     uniform vec2 u_resolution;
     uniform vec2 u_mouse;
     uniform float u_mass;
     uniform float u_time;
-
     const float PI = 3.14159265359;
-
-    // Função para rotacionar um ponto em torno de um centro por um ângulo (aqui o seno está fixo em zero)
     vec2 rotate(vec2 mt, vec2 st, float angle){
       float cosVal = cos(angle * PI);
       float sinVal = sin(angle * 0.0);
@@ -83,25 +75,32 @@
       float ny = (cosVal * (st.y - mt.y)) - (sinVal * (st.x - mt.x)) + mt.y;
       return vec2(nx, ny);
     }
-
     void main() {
       vec2 st = v_texCoord;
       vec2 mt = u_mouse / u_resolution;
-
       float dx = st.x - mt.x;
       float dy = st.y - mt.y;
       float dist = sqrt(dx * dx + dy * dy);
       float pull = u_mass / (dist * dist);
-
       vec2 r = rotate(mt, st, pull);
       vec4 imgcolor = texture2D(u_image, r);
       vec3 color = imgcolor.rgb - vec3(pull * 0.25);
-
       gl_FragColor = vec4(color, 1.0);
     }
   </script>
 
   <!-- Arquivo JavaScript externo -->
   <script src="./script.js"></script>
+
+  <!-- Script para tentar iniciar o áudio automaticamente ao carregar a página -->
+  <script>
+    window.addEventListener('load', () => {
+      const audio = document.getElementById('background-audio');
+      audio.play().catch((error) => {
+        console.log('Autoplay foi bloqueado:', error);
+        // Se o autoplay for bloqueado, o botão de play/pause já ficará visível para permitir a interação.
+      });
+    });
+  </script>
 </body>
 </html>
